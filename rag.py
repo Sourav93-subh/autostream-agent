@@ -6,15 +6,24 @@ def load_knowledge():
 
 def retrieve_answer(query):
     data = load_knowledge()
+    query = query.lower()
 
-    if "price" in query.lower():
+    # Pricing / Plans
+    if any(word in query for word in ["price", "pricing", "plan", "cost"]):
+        basic = data["pricing"]["basic"]
+        pro = data["pricing"]["pro"]
+
         return f"""
-Basic Plan: $29/month (10 videos, 720p)
-Pro Plan: $79/month (Unlimited videos, 4K, AI captions)
+Basic Plan: {basic['price']} ({", ".join(basic['features'])})
+Pro Plan: {pro['price']} ({", ".join(pro['features'])})
 """
-    elif "refund" in query.lower():
+
+    # Refund policy
+    elif "refund" in query:
         return data["policies"]["refund"]
-    elif "support" in query.lower():
+
+    # Support policy
+    elif "support" in query:
         return data["policies"]["support"]
 
     return "Sorry, I couldn't find that information."
